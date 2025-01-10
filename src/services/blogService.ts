@@ -9,7 +9,7 @@ import {
   UpdateBlogInput,
   updateBlogSchema,
 } from "../validators/blogValidator";
-import { z } from "zod";
+import redis from "../utils/redis";
 
 export class BlogService {
   private blogRepository: Repository<Blog>;
@@ -33,6 +33,27 @@ export class BlogService {
   async getAllBlogs(filters: GetBlogsInput) {
     try {
       const { page = 1, limit = 10, tags } = filters;
+
+      // NOTE:: this is not a real way to handle the most freq instead we could make a field on the database to count the most reviewed blogs and save there id's
+
+      const cacheKey = `blogs:${tags}:${page}:${limit}`;
+      // Attempt to check Redis only if Redis is configured and accessible
+      let cachedBlogs;
+      try {
+        cachedBlogs = await redis.get(cacheKey);
+      } catch (error) {
+        console.error("Redis error occurred, skipping Redis caching:", error);
+        cachedBlogs = null;
+      }
+
+      if (cachedBlogs) {
+        return {
+          code: 200,
+          message: "Blogs fetched successfully",
+          data: cachedBlogs,
+        };
+      }
+
       const data = await this.blogRepository.find({
         where: tags
           ? {
@@ -51,6 +72,7 @@ export class BlogService {
 
   async updateBlog(id: number, data: UpdateBlogInput) {
     try {
+      // TODO:: reset redis key of this blog
       const blog = await this.blogRepository.findOneBy({ id });
 
       if (!blog) {
@@ -67,6 +89,7 @@ export class BlogService {
 
   async deleteBlog(id: number) {
     try {
+      // TODO:: reset redis key of this blog
       const blog = await this.blogRepository.findOneBy({ id });
       if (!blog) {
         throw new CustomError("Blog not found", 404);
