@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models/User";
 
 export const generateToken = (payload: {
   name: string;
   roleId: number;
   email: string;
+  id: number;
 }): string => {
   return jwt.sign(payload, process.env.JWT_SECRET || "", { expiresIn: "1h" });
 };

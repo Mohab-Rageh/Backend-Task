@@ -5,15 +5,32 @@ import { AppDataSource } from "../data-source";
 import * as bcrypt from "bcrypt";
 import { generateToken } from "../utils/jwt";
 import { CustomError } from "../utils/CustomError";
+import { Role } from "../models/Role";
 
 export class UserService {
   private userRepository: Repository<User>;
+  private roleRepository: Repository<Role>;
 
   constructor() {
     this.userRepository = AppDataSource.getRepository(User);
+    this.roleRepository = AppDataSource.getRepository(Role);
   }
 
   async registerUser(data: RegisterUserInput) {
+    const userExists = await this.findUserByEmail(data.email);
+    if (userExists) {
+      throw new CustomError("User already exists", 409);
+    }
+
+    if (data.roleId) {
+      const role = await this.roleRepository.findOne({
+        where: { id: data.roleId },
+      });
+      if (!role) {
+        throw new CustomError("Role not found", 404);
+      }
+    }
+
     try {
       const hashedPassword = await bcrypt.hash(data.password, 10);
       const user = this.userRepository.create({
@@ -23,6 +40,7 @@ export class UserService {
       await this.userRepository.save(user);
       return { code: 201, message: "User registered successfully" };
     } catch (error) {
+      console.log(error);
       throw new CustomError("User registration failed", 500);
     }
   }
