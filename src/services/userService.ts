@@ -4,7 +4,7 @@ import { LoginInput, RegisterUserInput } from "../validators/userValidator";
 import { AppDataSource } from "../data-source";
 import * as bcrypt from "bcrypt";
 import { generateToken } from "../utils/jwt";
-import { CustomError } from "src/utils/CustomError";
+import { CustomError } from "../utils/CustomError";
 
 export class UserService {
   private userRepository: Repository<User>;
