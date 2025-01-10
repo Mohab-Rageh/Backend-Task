@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from "typeorm";
 import { Role } from "./Role";
 import { Blog } from "./Blog";
@@ -17,13 +18,17 @@ export class User {
   email: string;
 
   @Column()
-  username: string;
+  name: string;
 
   @Column()
   password: string;
 
-  @ManyToOne(() => Role, { eager: true })
-  role: Role;
+  @Column({ nullable: true })
+  roleId: number;
+
+  @ManyToOne(() => Role, { eager: true, nullable: true })
+  @JoinColumn({ name: "roleId" })
+  role?: Role;
 
   @OneToMany(() => Blog, (blog) => blog.author)
   blogs: Blog[];
