@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt";
 import { User } from "../models/User";
+import { AppDataSource } from "../data-source";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -22,9 +23,14 @@ export const authGuard = (requiredPermission: string) => {
       return;
     }
 
-    req.user = decoded as User;
+    const user = await AppDataSource.getRepository(User).findOne({
+      where: { id: (decoded as User).id },
+      relations: ["role", "role.permissions"],
+    });
 
-    const hasPermission = req.user.role?.permissions.some(
+    req.user = user as User;
+
+    const hasPermission = req.user.role?.permissions?.some(
       (perm) => perm.name === requiredPermission
     );
 
