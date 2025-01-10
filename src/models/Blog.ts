@@ -12,8 +12,8 @@ export class Blog {
   @Column("text")
   content: string;
 
-  @Column("simple-array") // Comma-separated values
-  tags: string[];
+  @Column("simple-array", { nullable: true })
+  tags?: string[];
 
   @ManyToOne(() => User, (user) => user.blogs)
   author: User;

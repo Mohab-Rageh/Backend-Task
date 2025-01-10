@@ -25,6 +25,7 @@ export class BlogService {
 
       return { code: 201, message: "Blog created successfully", blog };
     } catch (error) {
+      console.log(error);
       throw new CustomError("Failed to create blog", 500);
     }
   }
