@@ -40,7 +40,10 @@ export class BlogService {
       // Attempt to check Redis only if Redis is configured and accessible
       let cachedBlogs;
       try {
-        cachedBlogs = await redis.get(cacheKey);
+        const cachedBlogsJson = await redis.get(cacheKey);
+        cachedBlogs = cachedBlogsJson
+          ? (JSON.parse(cachedBlogsJson) as Blog[])
+          : null;
       } catch (error) {
         console.error("Redis error occurred, skipping Redis caching:", error);
         cachedBlogs = null;

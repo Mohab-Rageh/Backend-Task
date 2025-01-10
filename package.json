@@ -4,6 +4,7 @@
     "seed": "ts-node src/seeder.ts",
     "start": "node dist/server.js",
     "test": "jest",
+    "dev": "ts-node src/server.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:run": "npm run build && npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
     "migration:revert": "npm run build && npx typeorm-ts-node-commonjs migration:revert -d src/data-source.ts",

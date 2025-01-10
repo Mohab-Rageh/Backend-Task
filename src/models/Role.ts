@@ -19,7 +19,7 @@ export class Role {
     cascade: true,
   })
   @JoinTable({
-    name: "role_permissions", // Name of the join table
+    name: "role_permissions",
     joinColumn: { name: "role_id", referencedColumnName: "id" },
     inverseJoinColumn: { name: "permission_id", referencedColumnName: "id" },
   })

@@ -1,7 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { AppDataSource } from "../data-source";
-import { Blog } from "../models/Blog";
-
 import {
   createBlogSchema,
   getBlogsSchema,
@@ -68,7 +65,6 @@ export const getBlogs = async (
 ) => {
   try {
     const validatedData = validate(getBlogsSchema, req.body);
-    const { id } = req.params;
 
     const resp = await blogService.getAllBlogs(validatedData);
     const { code, ...rest } = resp;
