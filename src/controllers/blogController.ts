@@ -1,23 +1,79 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Blog } from "../models/Blog";
 
-export const createBlog = async (req: Request, res: Response) => {
-  const { title, content, tags } = req.body;
+import {
+  createBlogSchema,
+  getBlogsSchema,
+  updateBlogSchema,
+} from "../validators/blogValidator";
+import { validate } from "../utils/zodValidator";
+import { BlogService } from "../services/blogService";
 
+const blogService = new BlogService();
+
+export const createBlog = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const blog = AppDataSource.getRepository(Blog).create({
-      title,
-      content,
-      tags: tags.split(","),
-      author: req.user,
-    });
-    await AppDataSource.getRepository(Blog).save(blog);
+    const validatedData = validate(createBlogSchema, req.body);
 
-    res.status(201).json(blog);
+    const resp = await blogService.createBlog(validatedData);
+    const { code, ...rest } = resp;
+    res.status(code).json(rest);
   } catch (error) {
-    res.status(500).json({ message: "Error creating blog", error });
+    next(error);
   }
 };
 
-// Similar for updateBlog, deleteBlog, and getBlogs
+export const updateBlog = async (
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const validatedData = validate(updateBlogSchema, req.body);
+    const { id } = req.params;
+
+    const resp = await blogService.updateBlog(Number(id), validatedData);
+    const { code, ...rest } = resp;
+    res.status(code).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteBlog = async (
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const resp = await blogService.deleteBlog(Number(id));
+
+    const { code, ...rest } = resp;
+    res.status(code).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getBlogs = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const validatedData = validate(getBlogsSchema, req.body);
+    const { id } = req.params;
+
+    const resp = await blogService.getAllBlogs(validatedData);
+    const { code, ...rest } = resp;
+    res.status(code).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
