@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build": "tsc",
+    "vercel-build": "npm run build",
     "seed": "ts-node src/seeder.ts",
     "start": "node dist/server.js",
     "test": "jest",
@@ -13,6 +14,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "ioredis": "^5.4.2",

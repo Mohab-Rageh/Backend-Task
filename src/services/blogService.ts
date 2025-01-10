@@ -9,7 +9,7 @@ import {
   UpdateBlogInput,
   updateBlogSchema,
 } from "../validators/blogValidator";
-import redis from "../utils/redis";
+/* import redis from "../utils/redis"; */
 
 export class BlogService {
   private blogRepository: Repository<Blog>;
@@ -39,7 +39,7 @@ export class BlogService {
       const cacheKey = `blogs:${tags}:${page}:${limit}`;
       // Attempt to check Redis only if Redis is configured and accessible
       let cachedBlogs;
-      try {
+      /* try {
         const cachedBlogsJson = await redis.get(cacheKey);
         cachedBlogs = cachedBlogsJson
           ? (JSON.parse(cachedBlogsJson) as Blog[])
@@ -47,7 +47,7 @@ export class BlogService {
       } catch (error) {
         console.error("Redis error occurred, skipping Redis caching:", error);
         cachedBlogs = null;
-      }
+      } */
 
       if (cachedBlogs) {
         return {

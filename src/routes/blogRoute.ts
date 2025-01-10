@@ -34,7 +34,7 @@ const router = express.Router();
  *           minimum: 1
  *           maximum: 100
  *           example: 10
- *         description: The number of items per page (optional, max: 100).
+ *         description: The number of items per page (optional, max 100).
  *       - in: query
  *         name: tags
  *         schema:
@@ -76,6 +76,7 @@ const router = express.Router();
  *       403:
  *         description: Forbidden. User lacks the "read_blog" permission.
  */
+
 router.get("/", authGuard("read_blog"), getBlogs);
 
 /**
@@ -144,11 +145,12 @@ router.get("/", authGuard("read_blog"), getBlogs);
  *       403:
  *         description: Forbidden. User lacks the "create_blog" permission.
  */
+
 router.post("/", authGuard("create_blog"), createBlog);
 
 /**
  * @swagger
- * /api/blogs/:{id}:
+ * /api/blogs/{id}:
  *   put:
  *     summary: Update an existing blog
  *     description: Updates the details of an existing blog with the provided ID. The title, content, and tags can be updated. Requires a valid token with "update_blog" permission.
@@ -232,11 +234,12 @@ router.post("/", authGuard("create_blog"), createBlog);
  *       404:
  *         description: Blog not found.
  */
+
 router.put("/:id", authGuard("update_blog"), updateBlog);
 
 /**
  * @swagger
- * /api/blogs/:{id}:
+ * /api/blogs/{id}:
  *   delete:
  *     summary: Delete a blog
  *     description: Deletes an existing blog by its ID. Requires a valid token with "delete_blog" permission.
@@ -272,6 +275,7 @@ router.put("/:id", authGuard("update_blog"), updateBlog);
  *       404:
  *         description: Blog not found.
  */
+
 router.delete("/:id", authGuard("delete_blog"), deleteBlog);
 
 export default router;

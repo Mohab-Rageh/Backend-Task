@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
-
+const cors = require("cors");
 import userRoutes from "./routes/userRoute";
 import blogRoutes from "./routes/blogRoute";
 
@@ -15,7 +15,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../public")));
-
+app.use(cors());
 // Swagger setup
 const swaggerOptions = {
   definition: {
@@ -25,9 +25,14 @@ const swaggerOptions = {
       version: "1.0.0",
     },
   },
-  apis: ["src/routes/*.ts"],
+  apis: ["dist/routes/*.js"],
 };
 
+// Make sure the correct path is used for Swagger UI static assets
+app.use(
+  "/swagger-ui",
+  express.static(path.join(__dirname, "node_modules/swagger-ui-dist"))
+);
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 

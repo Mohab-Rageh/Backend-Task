@@ -16,4 +16,10 @@ export const AppDataSource = new DataSource({
   synchronize: process.env.NODE_ENV === "development",
   migrations: ["dist/migrations/*{.ts,.js}"],
   entities: [User, Blog, Role, Permission],
+  ssl:
+    process.env.NODE_ENV !== "development"
+      ? {
+          rejectUnauthorized: false, // This may be required depending on your provider
+        }
+      : undefined,
 });
