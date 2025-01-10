@@ -4,6 +4,7 @@ import { LoginInput, RegisterUserInput } from "../validators/userValidator";
 import { AppDataSource } from "../data-source";
 import * as bcrypt from "bcrypt";
 import { generateToken } from "../utils/jwt";
+import { CustomError } from "src/utils/CustomError";
 
 export class UserService {
   private userRepository: Repository<User>;
@@ -22,8 +23,7 @@ export class UserService {
       await this.userRepository.save(user);
       return { code: 201, message: "User registered successfully" };
     } catch (error) {
-      console.log(error);
-      return { code: 500, message: "Error registering user" };
+      throw new CustomError("User registration failed", 500);
     }
   }
 
@@ -33,12 +33,13 @@ export class UserService {
 
   async validateUserLogin(data: LoginInput) {
     const user = await this.findUserByEmail(data.email);
-    console.log({ user });
+
     if (user) {
       bcrypt.compare(data.password, user.password);
       const token = generateToken({ ...user });
       return { token, code: 200, message: "Login successful" };
     }
-    return { code: 401, message: "Invalid email or password" };
+
+    throw new CustomError("Invalid email or password", 401);
   }
 }
