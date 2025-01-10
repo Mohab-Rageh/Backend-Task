@@ -4,7 +4,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /register:
+ * /api/users/register:
  *   post:
  *     summary: Register a new user
  *     description: Registers a new user by providing the name, email, optional phone, role ID, and password. Returns a success message upon successful registration.
@@ -63,7 +63,7 @@ router.post("/register", registerUser);
 
 /**
  * @swagger
- * /login:
+ * /api/users/login:
  *   post:
  *     summary: User login
  *     description: Logs the user in by providing their email and password. Returns an authentication token upon successful login.

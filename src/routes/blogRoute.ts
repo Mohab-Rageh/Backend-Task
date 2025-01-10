@@ -11,7 +11,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /:
+ * /api/blogs:
  *   get:
  *     summary: Retrieve all blogs
  *     description: Fetches blogs with optional filters such as pagination and tags. Requires a valid token with "read_blog" permission.
@@ -80,7 +80,7 @@ router.get("/", authGuard("read_blog"), getBlogs);
 
 /**
  * @swagger
- * /:
+ * /api/blogs:
  *   post:
  *     summary: Create a new blog
  *     description: Creates a new blog post with the provided title, content, and optional tags. Requires a valid token with "create_blog" permission.
@@ -148,7 +148,7 @@ router.post("/", authGuard("create_blog"), createBlog);
 
 /**
  * @swagger
- * /{id}:
+ * /api/blogs/:{id}:
  *   put:
  *     summary: Update an existing blog
  *     description: Updates the details of an existing blog with the provided ID. The title, content, and tags can be updated. Requires a valid token with "update_blog" permission.
@@ -236,7 +236,7 @@ router.put("/:id", authGuard("update_blog"), updateBlog);
 
 /**
  * @swagger
- * /{id}:
+ * /api/blogs/:{id}:
  *   delete:
  *     summary: Delete a blog
  *     description: Deletes an existing blog by its ID. Requires a valid token with "delete_blog" permission.
