@@ -31,5 +31,5 @@ export class User {
   role?: Role;
 
   @OneToMany(() => Blog, (blog) => blog.author)
-  blogs: Blog[];
+  blogs?: Blog[];
 }

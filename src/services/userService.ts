@@ -51,10 +51,15 @@ export class UserService {
 
   async validateUserLogin(data: LoginInput) {
     const user = await this.findUserByEmail(data.email);
+    if (!user) {
+      throw new CustomError("Invalid email or password", 401);
+    }
 
-    if (user) {
-      bcrypt.compare(data.password, user.password);
+    const isPasswordMatch = await bcrypt.compare(data.password, user.password);
+
+    if (isPasswordMatch) {
       const token = generateToken({ ...user });
+
       return { token, code: 200, message: "Login successful" };
     }
 

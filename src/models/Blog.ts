@@ -16,5 +16,5 @@ export class Blog {
   tags?: string[];
 
   @ManyToOne(() => User, (user) => user.blogs)
-  author: User;
+  author?: User;
 }
