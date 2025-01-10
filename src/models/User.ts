@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
+import { Role } from "./Role";
 import { Blog } from "./Blog";
 
 @Entity()
@@ -15,8 +22,8 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: "Editor" })
-  role: "Admin" | "Editor";
+  @ManyToOne(() => Role, { eager: true })
+  role: Role;
 
   @OneToMany(() => Blog, (blog) => blog.author)
   blogs: Blog[];
